@@ -19,10 +19,12 @@ await authenticator.configure(with: client)
 >If you look close, you'll see that `AuthenticationEndpoint` is a `Resource` as well!
 
 Now that we know what a Resource is, we can also integrate an `AuthenticatedResource`, which is an extension of what a Resource is.
-If you need some sort of authentication to retrieve a resource, you need to conform your Resource object to AuthenticatedResource as well.
+If you need some sort of authentication to retrieve a resource, you need to conform your `Resource` object to `AuthenticatedResource` as well.
 
 ```swift
-struct UserFavourites: Resource, AuthenticatedResource { \|... }
+struct UserFavourites: Resource, AuthenticatedResource { \\... }
 ```
 
-By conforming to AuthenticatedResource, the SDK will automatically embed a bearer token to every request that you perform for this object.
+By conforming to `AuthenticatedResource`, the SDK will automatically embed a bearer token to every request that you perform for this object.
+If you explore the `AuthenticatedResource` definition, you'll see that it only has a single requirement: to provide some sort of Authenticator into your object.
+
