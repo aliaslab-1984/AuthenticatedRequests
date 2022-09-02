@@ -10,7 +10,7 @@ import Foundation
 /**
  This enum encapsulates all the requests that must be sent to retrieve or refresh an access token.
  */
-public struct AuthenticationEndpoint: Resource {
+public struct AuthenticationEndpoint: Resource, Equatable {
     
     public typealias Input = ARClientCredentials
     

@@ -41,6 +41,9 @@ public actor ARAuthenticator: Authenticator {
     /// Updates the current authentication endpoint with a new one.
     /// - Parameter authenticationEndpoint: The new authentication endpoint to be used.
     public func update(authenticationEndpoint: AuthenticationEndpoint) async {
+        guard self.authenticationEndpoint != authenticationEndpoint else {
+            return
+        }
         self.authenticationEndpoint = authenticationEndpoint
     }
     
