@@ -16,12 +16,14 @@ import KeychainSwift
 public final class ARTokenManager {
     
     private let keychain: TokenStore
-    private var keyPrefix: String = ""
+    private var keyPrefix: String
     private let encoder: JSONEncoder = .init()
     private let decoder: JSONDecoder = .init()
     
-    public init(keychain: TokenStore = KeychainSwift()) {
+    public init(keychain: TokenStore = KeychainSwift(),
+                prefix: String = "") {
         self.keychain = keychain
+        self.keyPrefix = prefix
     }
     
     public func setPrefix(_ prefix: String) {
