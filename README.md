@@ -26,10 +26,12 @@ struct UserFavorites: Resource, AuthenticatedResource {
 
     // Resource
 
-    var httpMethod: HttpMethod { get }
+    var httpMethod: HttpMethod { 
+        return .get
+    }
     
     func urlRequest(using parameter: Input) throws -> URLRequest {
-    
+        // Decide how you compose your URLRquest...
     }
     
     // AuthenticatedResource
