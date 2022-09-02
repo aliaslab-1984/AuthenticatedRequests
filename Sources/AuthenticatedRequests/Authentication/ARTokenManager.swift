@@ -20,17 +20,15 @@ public final class ARTokenManager {
     private let encoder: JSONEncoder = .init()
     private let decoder: JSONDecoder = .init()
     
-    init(keychain: TokenStore = KeychainSwift()) {
+    public init(keychain: TokenStore = KeychainSwift()) {
         self.keychain = keychain
-        // keychain.synchronizable = false
-        // keychain.accessGroup = "group.resurfer.sharedData"
     }
     
-    func setPrefix(_ prefix: String) {
+    public func setPrefix(_ prefix: String) {
         self.keyPrefix = prefix
     }
     
-    func saveToken(token: OAuth2Token) -> Bool {
+    public func saveToken(token: OAuth2Token) -> Bool {
         
         var success: Bool = true
         if !keychain.set(object: token,
@@ -52,13 +50,13 @@ public final class ARTokenManager {
         return success
     }
     
-    func token() -> OAuth2Token? {
+    public func token() -> OAuth2Token? {
         return keychain.object(OAuth2Token.self,
                                with: KeychainKey.clientToken.prefixed(keyPrefix),
                                usingDecoder: decoder)
     }
     
-    func tokenDate() -> Date? {
+    public func tokenDate() -> Date? {
         if let interval = keychain.object(TimeInterval.self,
                                           with: TokenKeys.creationDate.prefixed(keyPrefix),
                                           usingDecoder: decoder) {
@@ -69,7 +67,7 @@ public final class ARTokenManager {
         
     }
     
-    func removeToken() -> Bool {
+    public func removeToken() -> Bool {
         var success: Bool = true
         
         if !keychain.delete(KeychainKey.clientToken.prefixed(keyPrefix)) {

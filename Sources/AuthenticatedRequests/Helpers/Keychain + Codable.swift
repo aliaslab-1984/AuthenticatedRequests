@@ -9,7 +9,7 @@ import Foundation
 #if canImport(KeychainSwift)
 import KeychainSwift
 
-extension KeychainSwift {
+public extension KeychainSwift {
     
     func object<T: Codable>(_ type: T.Type, with key: String, usingDecoder decoder: JSONDecoder = JSONDecoder()) -> T? {
         guard let data = self.getData(key) else { return nil }

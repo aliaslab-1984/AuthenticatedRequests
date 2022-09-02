@@ -10,7 +10,7 @@ import Foundation
 /**
  An object that is required to store, manage and return codable oject into a safe box.
  */
-protocol TokenStore {
+public protocol TokenStore {
     
     func object<T: Codable>(_ type: T.Type,
                             with key: String,
