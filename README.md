@@ -47,7 +47,7 @@ struct UserFavorites: Resource, AuthenticatedResource {
 }
 ```
 
-By conforming to `AuthenticatedResource`, the SDK will automatically embed a bearer token to every request that you perform for this object.
+By conforming to `AuthenticatedResource`, the SDK will automatically embed a bearer token to every request that you perform for this object (based on your `ARClientCredentials` clientID).
 If you explore the `AuthenticatedResource` definition, you'll see that it only has one requirement: **Provide an Authenticator object**.
 
 
