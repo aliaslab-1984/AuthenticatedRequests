@@ -22,7 +22,27 @@ Now that we know what a Resource is, we can also integrate an `AuthenticatedReso
 If you need some sort of authentication to retrieve a resource, you need to conform your `Resource` object to `AuthenticatedResource` as well.
 
 ```swift
-struct UserFavourites: Resource, AuthenticatedResource { \\... }
+struct UserFavorites: Resource, AuthenticatedResource { 
+
+    // Resource
+
+    var httpMethod: HttpMethod { get }
+    
+    func urlRequest(using parameter: Input) throws -> URLRequest {
+    
+    }
+    
+    // AuthenticatedResource
+    
+    var authenticator: AnyAuthenticator<ARClientCredentials> { 
+    
+    }
+    
+    func configure(with credentials: ARClientCredentials) async {
+    
+    }
+
+}
 ```
 
 By conforming to `AuthenticatedResource`, the SDK will automatically embed a bearer token to every request that you perform for this object.
