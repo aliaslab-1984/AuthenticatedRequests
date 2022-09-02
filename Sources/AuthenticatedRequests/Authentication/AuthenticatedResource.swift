@@ -18,8 +18,6 @@ public protocol AuthenticatedResource {
      */
     var authenticator: AnyAuthenticator<ARClientCredentials> { get }
     
-    func configure(with credentials: ARClientCredentials) async
-    
 }
 
 extension URLRequest {
