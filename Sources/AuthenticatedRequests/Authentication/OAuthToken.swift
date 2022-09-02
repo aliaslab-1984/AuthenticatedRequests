@@ -13,18 +13,18 @@ public protocol BearerToken: Codable, Equatable {
     var isValid: Bool { get }
 }
 
-public struct OAuth2Token: Codable, Equatable {
+public struct OAuth2Token: BearerToken {
     
     /// date when the token was initialized
-    var date = Date()
-    var access_token: String // swiftlint:disable:this identifier_name
-    var refresh_token: String? // swiftlint:disable:this identifier_name
-    var expires_in: Int // swiftlint:disable:this identifier_name
-    var token_type: String // swiftlint:disable:this identifier_name
-    var scope: String?
+    public var date = Date()
+    public var access_token: String // swiftlint:disable:this identifier_name
+    public var refresh_token: String? // swiftlint:disable:this identifier_name
+    public var expires_in: Int // swiftlint:disable:this identifier_name
+    public var token_type: String // swiftlint:disable:this identifier_name
+    public var scope: String?
     
     /// checks if token is still valid or has expired
-    var isValid: Bool {
+    public var isValid: Bool {
         let now = Date()
         let seconds = TimeInterval(expires_in)
         return now.timeIntervalSince(date) < seconds
