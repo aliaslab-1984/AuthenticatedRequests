@@ -7,7 +7,7 @@
 
 import Foundation
 
-// -MARK: Authenticator
+// MARK: -Authenticator
 
 /**
  An object that is capable to authenticate a request based on a ARConfiguration.
@@ -27,7 +27,8 @@ public protocol Authenticator {
     func configure(with parameter: ARConfiguration) async
     
     /**
-     - returns The current configuration.
+     The current configuration that is held by the authenticator.
+     - Returns The current configuration.
      */
     func configuration() async -> ARConfiguration?
     
