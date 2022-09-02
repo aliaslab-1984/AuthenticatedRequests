@@ -31,7 +31,8 @@ public actor ARAuthenticator: Authenticator {
     
     private let authenticationEndpoint: AuthenticationEndpoint
     
-    init(tokenStore: ARTokenManager, baseEndpoint: AuthenticationEndpoint) {
+    public init(tokenStore: ARTokenManager,
+                baseEndpoint: AuthenticationEndpoint) {
         self.tokenStore = tokenStore
         self.authenticationEndpoint = baseEndpoint
     }
