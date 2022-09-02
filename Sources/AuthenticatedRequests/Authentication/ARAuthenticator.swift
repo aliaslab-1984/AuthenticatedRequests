@@ -38,6 +38,12 @@ public actor ARAuthenticator: Authenticator {
         self.authenticationEndpoint = baseEndpoint
     }
     
+    /// Updates the current authentication endpoint with a new one.
+    /// - Parameter authenticationEndpoint: The new authentication endpoint to be used.
+    public func update(authenticationEndpoint: AuthenticationEndpoint) async {
+        self.authenticationEndpoint = authenticationEndpoint
+    }
+    
     /// Configures the authenticator with a new client credentials instance.
     /// This will trigger a override of the current token.
     ///
