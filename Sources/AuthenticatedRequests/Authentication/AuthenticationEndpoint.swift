@@ -20,7 +20,7 @@ public struct AuthenticationEndpoint: Resource {
     
     private let newTokenPath: String
     
-    init(baseEndpoint: URL,
+    public init(baseEndpoint: URL,
          path: String) {
         self.baseEndpoint = baseEndpoint
         self.newTokenPath = path

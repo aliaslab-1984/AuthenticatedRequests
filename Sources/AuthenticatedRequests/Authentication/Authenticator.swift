@@ -12,7 +12,7 @@ import Foundation
 /**
  An object that is capable to authenticate a request based on a ARConfiguration.
  */
-protocol Authenticator {
+public protocol Authenticator {
     
     associatedtype ARConfiguration
     
@@ -71,9 +71,9 @@ extension Authenticator where ARConfiguration == ARClientCredentials {
  */
 public struct AnyAuthenticator<A>: Authenticator {
     
-    typealias ARConfiguration = A
+    public typealias ARConfiguration = A
     
-    func tokenStore() async -> ARTokenManager {
+    public func tokenStore() async -> ARTokenManager {
         return await onStore.value
     }
 
@@ -82,7 +82,7 @@ public struct AnyAuthenticator<A>: Authenticator {
     private var onConfiguration: Task<A?, Never>?
     private var onStore: Task<ARTokenManager, Never>
    
-    init<Auth: Authenticator>(_ authenticator: Auth) where Auth.ARConfiguration == A {
+    public init<Auth: Authenticator>(_ authenticator: Auth) where Auth.ARConfiguration == A {
         self.onConfigure = { configuration in
             Task {
                 await authenticator.configure(with: configuration)
@@ -102,15 +102,15 @@ public struct AnyAuthenticator<A>: Authenticator {
         }
     }
     
-    func configure(with parameter: A) async {
+    public func configure(with parameter: A) async {
         onConfigure?(parameter)
     }
     
-    func configuration() async -> A? {
+    public func configuration() async -> A? {
         return await onConfiguration?.value
     }
     
-    func validToken() async throws -> OAuth2Token {
+    public func validToken() async throws -> OAuth2Token {
         return try await onValidToken?.value ?? OAuth2Token.invalidToken
     }
     

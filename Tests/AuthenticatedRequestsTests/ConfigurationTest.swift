@@ -15,7 +15,7 @@ final class ConfigurationTest: XCTestCase {
     var token: OAuth2Token?
     var keychain = MockTokenStore()
     lazy var authenticator: ARAuthenticator = {
-        ARAuthenticator(tokenStore: ARTokenManager(keychain: self.keychain), baseEndpoint: URL(staticString: "https:/api.redgifs.com"))
+        ARAuthenticator(tokenStore: ARTokenManager(keychain: self.keychain), baseEndpoint: AuthenticationEndpoint(baseEndpoint: URL(staticString: "https://api.example.com"), path: "Auth"))
     }()
     
     let client = ARClientCredentials(clientID: "esempio", clientSecret: "esempio", scope: Set([]))
