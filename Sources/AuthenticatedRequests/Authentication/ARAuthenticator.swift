@@ -29,7 +29,8 @@ public actor ARAuthenticator: Authenticator {
     private var fetchTask: Task<OAuth2Token, Error>?
     private var clientCredentials: ARClientCredentials?
     
-    private let authenticationEndpoint: AuthenticationEndpoint
+    /// The current authentication endpoint.
+    public var authenticationEndpoint: AuthenticationEndpoint
     
     public init(tokenStore: ARTokenManager,
                 baseEndpoint: AuthenticationEndpoint) {
