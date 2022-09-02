@@ -22,22 +22,10 @@ extension Prefixable where RawValue == String {
 public enum KeychainKey: String, Prefixable {
     
     case clientToken
-
-    func prefixed(_ value: String) -> String {
-        return doPrefix(prefix: value)
-    }
-}
-
-public enum TokenKeys: String, Prefixable {
-    case accessToken = "accessToken"
-    case refreshToken = "refreshToken"
-    case type = "token_type"
-    case expires = "expire"
-    case scope = "scope"
-    case lastUpdate = "lastUpdate"
     case creationDate = "creationDate"
-    
+
     func prefixed(_ value: String) -> String {
         return doPrefix(prefix: value)
     }
 }
+

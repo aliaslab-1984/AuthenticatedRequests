@@ -41,7 +41,7 @@ public final class ARTokenManager {
         }
         
         if !keychain.set(object: Date().timeIntervalSince1970,
-                         forKey: TokenKeys.creationDate.prefixed(keyPrefix),
+                         forKey: KeychainKey.creationDate.prefixed(keyPrefix),
                          usingEncoder: encoder) {
             print("Unable to set new logged date.")
             success = false
@@ -60,7 +60,7 @@ public final class ARTokenManager {
     
     public func tokenDate() -> Date? {
         if let interval = keychain.object(TimeInterval.self,
-                                          with: TokenKeys.creationDate.prefixed(keyPrefix),
+                                          with: KeychainKey.creationDate.prefixed(keyPrefix),
                                           usingDecoder: decoder) {
             return Date(timeIntervalSince1970: interval)
         } else {
