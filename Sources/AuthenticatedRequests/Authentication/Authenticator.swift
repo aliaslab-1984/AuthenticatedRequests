@@ -38,7 +38,7 @@ public protocol Authenticator {
     
 }
 
-extension Authenticator where ARConfiguration == ARClientCredentials {
+public extension Authenticator where ARConfiguration == ARClientCredentials {
     
     /**
      Given the current credentials (returned by the `configuration()`), this method does a validation, to ensure that they satisfy some minimum requirements.
