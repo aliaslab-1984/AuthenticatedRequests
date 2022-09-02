@@ -8,11 +8,11 @@ An Authenticator is an `actor` which is responsible to keep track of the authent
 
 Configuring an Authenticator is really simple:
 
-```
-let authenticator = ARAuthenticator(baseEndpoint: AuthenticationEndpoint(baseEndpoint: URL(staticString: "https://api.example.com"), path: "auth/v2/token"))
+```swift
+let endpoint = AuthenticationEndpoint(baseEndpoint: URL(staticString: "https://api.example.com"), path: "auth/v2/token")
+let authenticator = ARAuthenticator(baseEndpoint: endpoint)
 let client = ARClientCredentials(clientID: "esempio", clientSecret: "esempio", scope: Set([]))
 await authenticator.configure(with: client)
-
 // We are ready to get our first Authenticated resource!
 ```
 
@@ -21,8 +21,8 @@ await authenticator.configure(with: client)
 Now that we know what a Resource is, we can also integrate an `AuthenticatedResource`, which is an extension of what a Resource is.
 If you need some sort of authentication to retrieve a resource, you need to conform your Resource object to AuthenticatedResource as well.
 
-```
-struct UserFavourtes: Resource, AuthenticatedResource { \|... }
+```swift
+struct UserFavourites: Resource, AuthenticatedResource { \|... }
 ```
 
 By conforming to AuthenticatedResource, the SDK will automatically embed a bearer token to every request that you perform for this object.
