@@ -49,12 +49,12 @@ public struct OAuth2Token: Codable, Equatable {
         date = Date()
     }
     
-    init(access_token: String,
-         refresh_token: String?,
-         expires_in: Int,
-         token_type: String,
-         scope: String? = nil,
-         creationDate: Date) { // swiftlint:disable:this identifier_name
+    public init(access_token: String,
+                refresh_token: String?,
+                expires_in: Int,
+                token_type: String,
+                scope: String? = nil,
+                creationDate: Date) { // swiftlint:disable:this identifier_name
         self.access_token = access_token
         self.refresh_token = refresh_token
         self.token_type = token_type
