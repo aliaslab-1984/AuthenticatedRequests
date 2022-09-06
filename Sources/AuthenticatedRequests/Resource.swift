@@ -70,6 +70,38 @@ public extension Resource where Output: Codable {
     
 }
 
+public extension Resource where Output == URL {
+    
+    /// Requests the desired resource asynchronously.
+    /// - Parameter parameter: The input parameter that is necessary to build the URLRequest.
+    /// - Returns: Returns the received data decoded into the expected output type, or throws an error.
+    func download(using parameter: Input) async throws -> Output {
+        var request = try urlRequest(using: parameter)
+            
+        // If the resource is also authenticated, wee need to embedd an authentication token.
+        if let authenticated = self as? AuthenticatedResource {
+            let token = try await authenticated.authenticator.validToken()
+            request.authenticated(with: token)
+        }
+        
+        let (filesystemURL, response): (URL, URLResponse)
+        if #available(iOS 15.0, macOS 12.0, *) {
+            (filesystemURL, response) = try await URLSession.shared.download(for: request)
+        } else {
+            (filesystemURL, response) = try await URLSession.shared.download(using: request)
+        }
+        
+        // We check if the Task got cancelled to avoid decoding data for nothing.
+        try Task.checkCancellation()
+        
+        // We first validate the URLResponse that we received in order to check if everything went ok.
+        try validateResponse(response)
+        
+        return filesystemURL
+    }
+    
+}
+
 extension Resource {
     
     /**

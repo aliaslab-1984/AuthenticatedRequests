@@ -47,4 +47,45 @@ public extension URLSession {
             }
         )
     }
+    
+    /// Start a download task with a URL using async/await.
+    /// - parameter url: The URL to send a request to.
+    /// - returns: A tuple containing the filesystem `URL` where the content was downloaded,
+    ///   as well as a `URLResponse` representing the server's response.
+    /// - throws: Any error encountered while performing the download task.
+    func download(from url: URL) async throws -> (URL, URLResponse) {
+        try await download(using: URLRequest(url: url))
+    }
+
+    /// Start a download task with a `URLRequest` using async/await.
+    /// - parameter request: The `URLRequest` that the data task should perform.
+    /// - returns: A tuple containing the filesystem `URL` where the content was downloaded,
+    ///   as well as a `URLResponse` representing the server's response.
+    /// - throws: Any error encountered while performing the download task.
+    func download(using request: URLRequest) async throws -> (URL, URLResponse) {
+        var dataTask: URLSessionDownloadTask?
+        let onCancel = { dataTask?.cancel() }
+
+        return try await withTaskCancellationHandler(
+            handler: {
+                onCancel()
+            },
+            operation: {
+                try await withCheckedThrowingContinuation { continuation in
+                    
+                    self.downloadTask(with: request) { filesystemURL, response, error in
+                        guard let url = filesystemURL,
+                              let response = response else {
+                            let error = error ?? URLError(.badServerResponse)
+                            return continuation.resume(throwing: error)
+                        }
+                        
+                        continuation.resume(returning: (url, response))
+                    }
+                    
+                    dataTask?.resume()
+                }
+            }
+        )
+    }
 }
