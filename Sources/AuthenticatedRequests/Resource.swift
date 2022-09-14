@@ -38,7 +38,7 @@ public extension Resource where Output: Codable {
     /// Requests the desired resource asynchronously.
     /// - Parameter parameter: The input parameter that is necessary to build the URLRequest.
     /// - Returns: Returns the received data decoded into the expected output type, or throws an error.
-    func request(using parameter: Input) async throws -> Output {
+    func request(using parameter: Input, urlConfiguration: URLSessionConfiguration? = nil) async throws -> Output {
         var request = try urlRequest(using: parameter)
             
         // If the resource is also authenticated, wee need to embedd an authentication token.
@@ -47,11 +47,19 @@ public extension Resource where Output: Codable {
             request.authenticated(with: token)
         }
         
+        let session: URLSession
+        
+        if let urlConfiguration {
+            session = URLSession(configuration: urlConfiguration)
+        } else {
+            session = URLSession.shared
+        }
+        
         let (data, response): (Data, URLResponse)
         if #available(iOS 15.0, macOS 12.0, *) {
-            (data, response) = try await URLSession.shared.data(for: request)
+            (data, response) = try await session.data(for: request)
         } else {
-            (data, response) = try await URLSession.shared.data(using: request)
+            (data, response) = try await session.data(using: request)
         }
         
         // We check if the Task got cancelled to avoid decoding data for nothing.
@@ -75,7 +83,8 @@ public extension Resource where Output == URL {
     /// Requests the desired resource asynchronously.
     /// - Parameter parameter: The input parameter that is necessary to build the URLRequest.
     /// - Returns: Returns the received data decoded into the expected output type, or throws an error.
-    func download(using parameter: Input) async throws -> Output {
+    func download(using parameter: Input,
+                  urlConfiguration: URLSessionConfiguration? = nil) async throws -> Output {
         var request = try urlRequest(using: parameter)
             
         // If the resource is also authenticated, wee need to embedd an authentication token.
@@ -84,11 +93,19 @@ public extension Resource where Output == URL {
             request.authenticated(with: token)
         }
         
+        let session: URLSession
+        
+        if let urlConfiguration {
+            session = URLSession(configuration: urlConfiguration)
+        } else {
+            session = URLSession.shared
+        }
+        
         let (filesystemURL, response): (URL, URLResponse)
         if #available(iOS 15.0, macOS 12.0, *) {
-            (filesystemURL, response) = try await URLSession.shared.download(for: request)
+            (filesystemURL, response) = try await session.download(for: request)
         } else {
-            (filesystemURL, response) = try await URLSession.shared.download(using: request)
+            (filesystemURL, response) = try await session.download(using: request)
         }
         
         // We check if the Task got cancelled to avoid decoding data for nothing.

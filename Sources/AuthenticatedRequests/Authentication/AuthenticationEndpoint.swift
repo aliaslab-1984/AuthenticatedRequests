@@ -20,10 +20,14 @@ public struct AuthenticationEndpoint: Resource, Equatable {
     
     private let newTokenPath: String
     
+    private let userAgent: String?
+    
     public init(baseEndpoint: URL,
-         path: String) {
+                path: String,
+                userAgent: String? = nil) {
         self.baseEndpoint = baseEndpoint
         self.newTokenPath = path
+        self.userAgent = userAgent
     }
     
     public var httpMethod: HttpMethod {
@@ -37,6 +41,11 @@ public struct AuthenticationEndpoint: Resource, Equatable {
         urlRequest.httpMethod = self.httpMethod.rawValue
         urlRequest.setValue("application/x-www-form-urlencoded",
                             forHTTPHeaderField: "Content-Type")
+        
+        if let userAgent {
+            urlRequest.setValue(userAgent,
+                                forHTTPHeaderField: "User-Agent")
+        }
         
         let loginData: [String: String] = ["grant_type": "client_credentials",
                                            "client_id": parameter.clientID,
