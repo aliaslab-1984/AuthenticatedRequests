@@ -83,8 +83,12 @@ public extension URLSession {
                         do {
                             
                             let cache = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-                            let destinationURL = cache.appendingPathComponent("Downloads", isDirectory: true)
-                                .appendingPathComponent(url.lastPathComponent)
+                            
+                            let destinationFolder = cache.appendingPathComponent("Downloads", isDirectory: true)
+                                
+                            try FileManager.default.createDirectory(at: destinationFolder, withIntermediateDirectories: true)
+                            
+                            let destinationURL = destinationFolder.appendingPathComponent(url.lastPathComponent)
                             
                             try FileManager.default.copyItem(at: url, to: destinationURL)
                             
