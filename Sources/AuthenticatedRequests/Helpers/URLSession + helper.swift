@@ -73,7 +73,7 @@ public extension URLSession {
             operation: {
                 try await withCheckedThrowingContinuation { continuation in
                     
-                    self.downloadTask(with: request) { filesystemURL, response, error in
+                    dataTask = self.downloadTask(with: request) { filesystemURL, response, error in
                         guard let url = filesystemURL,
                               let response = response else {
                             let error = error ?? URLError(.badServerResponse)
