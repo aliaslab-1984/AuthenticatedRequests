@@ -80,7 +80,18 @@ public extension URLSession {
                             return continuation.resume(throwing: error)
                         }
                         
-                        continuation.resume(returning: (url, response))
+                        do {
+                            
+                            let cache = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                            let destinationURL = cache.appendingPathComponent("Downloads", isDirectory: true)
+                                .appendingPathComponent(url.lastPathComponent)
+                            
+                            try FileManager.default.copyItem(at: url, to: destinationURL)
+                            
+                            continuation.resume(returning: (destinationURL, response))
+                        } catch {
+                            continuation.resume(returning: (url, response))
+                        }
                     }
                     
                     dataTask?.resume()
