@@ -38,7 +38,8 @@ public extension Resource where Output: Codable {
     /// Requests the desired resource asynchronously.
     /// - Parameter parameter: The input parameter that is necessary to build the URLRequest.
     /// - Returns: Returns the received data decoded into the expected output type, or throws an error.
-    func request(using parameter: Input, urlConfiguration: URLSessionConfiguration? = nil) async throws -> Output {
+    func request(using parameter: Input,
+                 urlConfiguration: URLSessionConfiguration? = nil) async throws -> Output {
         var request = try urlRequest(using: parameter)
             
         // If the resource is also authenticated, wee need to embedd an authentication token.

@@ -15,7 +15,7 @@ public enum AuthenticatorError: Error {
 
 /**
  Atomic object that manages to refresh the OAuthToken when needed.
- It must be configured with a `ClientCredentials` in order to correcly fetch and save the `OAuthToken`s.
+ It must be configured with a `ClientCredentials` in order to correctly fetch and save the `OAuthToken`s.
  */
 public actor ARAuthenticator: Authenticator {
     

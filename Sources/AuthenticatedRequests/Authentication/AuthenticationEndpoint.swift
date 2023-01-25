@@ -58,7 +58,7 @@ public struct AuthenticationEndpoint: Resource, Equatable {
     
 }
 
-extension Dictionary where Value == String, Key == String {
+public extension Dictionary where Value == String, Key == String {
     
     var urlEncoded: Data? {
         return self.compactMap { touple in

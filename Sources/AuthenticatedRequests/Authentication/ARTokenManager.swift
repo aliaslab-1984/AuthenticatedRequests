@@ -66,7 +66,6 @@ public final class ARTokenManager {
         } else {
             return nil
         }
-        
     }
     
     public func removeToken() -> Bool {
