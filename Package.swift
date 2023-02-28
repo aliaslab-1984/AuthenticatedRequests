@@ -10,7 +10,10 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "AuthenticatedRequests",
-            targets: ["AuthenticatedRequests"])
+            targets: ["AuthenticatedRequests"]),
+        .library(
+            name: "CodeFlowOAuth",
+            targets: ["CodeFlowOAuth"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -23,6 +26,10 @@ let package = Package(
         .target(
             name: "AuthenticatedRequests",
             dependencies: [.product(name: "KeychainSwift", package: "keychain-swift")]),
+        .target(
+            name: "CodeFlowOAuth",
+            dependencies: [.product(name: "KeychainSwift", package: "keychain-swift"),
+                           "AuthenticatedRequests"]),
         .testTarget(
             name: "AuthenticatedRequestsTests",
             dependencies: ["AuthenticatedRequests", .product(name: "KeychainSwift", package: "keychain-swift")])

@@ -39,7 +39,7 @@ public protocol Authenticator {
     
 }
 
-public extension Authenticator where ARConfiguration == ARClientCredentials {
+public extension Authenticator where ARConfiguration == OAuthFlow {
     
     /**
      Given the current credentials (returned by the `configuration()`), this method does a validation, to ensure that they satisfy some minimum requirements.
@@ -48,17 +48,12 @@ public extension Authenticator where ARConfiguration == ARClientCredentials {
     func validateCredentials() async throws -> ARConfiguration {
         async let configuration = configuration()
         guard let clientCredentials = await configuration else {
-            throw AuthenticatorError.missingClientCredentials
+            throw AuthenticatorError.missingConfiguration
         }
         
-        guard !clientCredentials.clientID.isEmpty ||
-                !clientCredentials.clientSecret.isEmpty else {
+        guard clientCredentials.isValid else {
             throw AuthenticatorError.invalidClientCredentials
         }
-        
-//        guard !clientCredentials.scope.isEmpty else {
-//            throw AuthenticatorError.invalidScope
-//        }
         
         return clientCredentials
     }

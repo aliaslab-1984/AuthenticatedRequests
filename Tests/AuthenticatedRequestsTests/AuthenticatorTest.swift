@@ -31,7 +31,7 @@ final class AuthenticatorTest: XCTestCase {
         do {
             _ = try await authenticator.validToken()
         } catch {
-            error.mapAuthenticationError(with: .missingClientCredentials)
+            error.mapAuthenticationError(with: .missingConfiguration)
         }
     }
     

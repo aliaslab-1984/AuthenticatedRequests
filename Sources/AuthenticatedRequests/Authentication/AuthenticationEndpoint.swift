@@ -12,7 +12,7 @@ import Foundation
  */
 public struct AuthenticationEndpoint: Resource, Equatable {
     
-    public typealias Input = ARClientCredentials
+    public typealias Input = OAuthFlow
     
     public typealias Output = OAuth2Token
     
@@ -47,11 +47,7 @@ public struct AuthenticationEndpoint: Resource, Equatable {
                                 forHTTPHeaderField: "User-Agent")
         }
         
-        let loginData: [String: String] = ["grant_type": "client_credentials",
-                                           "client_id": parameter.clientID,
-                                           "client_secret": parameter.clientSecret]
-        
-        urlRequest.httpBody = loginData.urlEncoded
+        urlRequest.httpBody = parameter.httpBody
         
         return urlRequest
     }

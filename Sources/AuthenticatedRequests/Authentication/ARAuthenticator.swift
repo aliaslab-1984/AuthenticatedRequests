@@ -8,26 +8,26 @@
 import Foundation
 
 public enum AuthenticatorError: Error {
-    case missingClientCredentials
+    case missingConfiguration
     case invalidClientCredentials
     case invalidScope
 }
 
 /**
  Atomic object that manages to refresh the OAuthToken when needed.
- It must be configured with a `ClientCredentials` in order to correctly fetch and save the `OAuthToken`s.
+ It must be configured with a `OAuthFlow` in order to correctly fetch and save the `OAuthToken`s.
  */
 public actor ARAuthenticator: Authenticator {
     
-    public typealias ARConfiguration = ARClientCredentials
+    public typealias ARConfiguration = OAuthFlow
     
     private var tokenStore: ARTokenManager
     private var currentToken: OAuth2Token = .init(access_token: "", refresh_token: nil, expires_in: 0, token_type: "bearer", creationDate: Date())
     /**
-     The task that is responsible for the fetch of a new access token.
+     The task that is responsible for the fetch of a new access token or for a refresh.
      */
     private var fetchTask: Task<OAuth2Token, Error>?
-    private var clientCredentials: ARClientCredentials?
+    private var clientCredentials: ARConfiguration?
     
     /// The current authentication endpoint.
     public var authenticationEndpoint: AuthenticationEndpoint
@@ -54,7 +54,7 @@ public actor ARAuthenticator: Authenticator {
     /// - Parameter parameter: The new client credentials instance that will replace the current one.
     public func configure(with parameter: ARConfiguration) async {
         
-        guard parameter != clientCredentials else {
+        guard !parameter.isEqualTo(otherFlow: clientCredentials) else {
             return
         }
         
@@ -76,7 +76,7 @@ public actor ARAuthenticator: Authenticator {
         return self.tokenStore
     }
     
-    public func configuration() async -> ARClientCredentials? {
+    public func configuration() async -> ARConfiguration? {
         return self.clientCredentials
     }
     
@@ -94,11 +94,21 @@ public actor ARAuthenticator: Authenticator {
                 return currentToken
             }
             
-            let newToken = try await authenticationEndpoint.request(using: credentials)
-            
-            assignNewToken(newToken)
-            
-            return newToken
+            if let refresh = currentToken.refresh_token {
+                let flow = ARRefreshToken(clientID: credentials.clientID, clientSecret: "", refreshToken: refresh)
+                
+                let newToken = try await authenticationEndpoint.request(using: flow)
+                
+                assignNewToken(newToken)
+                
+                return newToken
+            } else {
+                let newToken = try await authenticationEndpoint.request(using: credentials)
+                
+                assignNewToken(newToken)
+                
+                return newToken
+            }
         }
         
         self.fetchTask = task
