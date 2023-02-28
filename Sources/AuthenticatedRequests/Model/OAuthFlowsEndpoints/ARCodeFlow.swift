@@ -16,7 +16,7 @@ public struct ARCodeFlow: Codable, Equatable, OAuthFlow {
     public let clientID: String
     let code: String
     let redirectUrl: String
-    let codeVerifier: String
+    let codeVerifier: String?
     
     /// Creates a new instance of a code-flow authentication object.
     /// - Parameters:
@@ -27,7 +27,7 @@ public struct ARCodeFlow: Codable, Equatable, OAuthFlow {
     public init(clientID: String,
                 code: String,
                 redirectUrl: String,
-                codeVerifier: String) {
+                codeVerifier: String?) {
         self.clientID = clientID
         self.code = code
         self.redirectUrl = redirectUrl
@@ -41,19 +41,22 @@ public struct ARCodeFlow: Codable, Equatable, OAuthFlow {
     }
     
     public var httpBody: Data? {
-        let loginData: [String: String] = ["grant_type": "authorization_code",
+        var loginData: [String: String] = ["grant_type": "authorization_code",
                                            "code": code,
                                            "redirect_uri": redirectUrl,
-                                           "client_id": clientID,
-                                           "code_verifier": codeVerifier]
+                                           "client_id": clientID]
+        
+        if let codeVerifier {
+            loginData["code_verifier"] = codeVerifier
+        }
+        
         return loginData.urlEncoded
     }
     
     public var isValid: Bool {
         guard !clientID.isEmpty ||
               !code.isEmpty ||
-              !redirectUrl.isEmpty ||
-              !codeVerifier.isEmpty else {
+              !redirectUrl.isEmpty else {
             return false
         }
         

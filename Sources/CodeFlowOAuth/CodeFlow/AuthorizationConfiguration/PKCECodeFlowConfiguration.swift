@@ -18,7 +18,7 @@ public struct PKCECodeFlowConfiguration: CodeFlowConfiguration {
     let responseType: String
     let codeChallenge: String
     let codeChallengeMethod: String
-    let codeChallengeVerifier: String
+    public let codeChallengeVerifier: String
     
     public init(stateLenght: Int = 20) throws {
         self.state = CryptographicHelper.generateState(withLength: stateLenght)
