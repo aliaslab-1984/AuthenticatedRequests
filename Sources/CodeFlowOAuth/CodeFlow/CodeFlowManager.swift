@@ -34,6 +34,10 @@ public final class CodeFlowManager {
     
     public func startSignIn() async throws -> String {
         
+        // We need to check the redirect uri scheme, since
+        // ASWebAuthenticationSession crashes if the provided uri starts with https/http.
+        // This happens because it's a good practice to register a custom scheme for your app
+        // Instead of having an http page..
         let redirectURL = URL(string: configuration.redirectURI)
         if let scheme = redirectURL?.scheme,
            scheme == "https" || scheme == "http" {
