@@ -12,7 +12,7 @@ import AuthenticationServices
 
 public final class CodeFlowManager {
     
-    public enum LoginError: Error {
+    public enum LoginError: Error, LocalizedError {
         // Initial login
         case badLoginURL
         case badRedirectURI
@@ -22,6 +22,25 @@ public final class CodeFlowManager {
         case missingCode
         case stateMismatch
         case unknownCodeFlow
+        
+        public var errorDescription: String? {
+            switch self {
+            case .badLoginURL:
+                return "The provided login url, is not valid."
+            case .badRedirectURI:
+                return "The provided redirect uri, is not valid."
+            case .missingQueryItems:
+                return "Missing some components for the login."
+            case .missingState:
+                return "No state has been provided."
+            case .missingCode:
+                return "No code has been provided."
+            case .stateMismatch:
+                return "The two states doesn't match with each other."
+            case .unknownCodeFlow:
+                return "The code flow is unknown."
+            }
+        }
     }
     
     let configuration: AuthenticationConfiguration

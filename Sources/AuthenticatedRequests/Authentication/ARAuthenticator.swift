@@ -7,10 +7,22 @@
 
 import Foundation
 
-public enum AuthenticatorError: Error {
+public enum AuthenticatorError: Error, LocalizedError {
     case missingConfiguration
     case invalidClientCredentials
     case invalidScope
+    
+    public var errorDescription: String? {
+        switch self {
+        case .missingConfiguration:
+            return "The authenticator has not been configured with the authentication endpoint."
+        case .invalidClientCredentials:
+            return "The provided credentials are not valid."
+        case .invalidScope:
+            return "The provided scope, is not valid."
+        }
+    }
+    
 }
 
 /**
