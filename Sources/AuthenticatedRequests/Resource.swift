@@ -138,7 +138,7 @@ extension Resource {
         print("Status code: ", response.statusCode)
         
         guard (200 ... 299) ~= response.statusCode else { // check for http errors
-            throw ResourceError.badResponse(responseCode: response.statusCode)
+            throw ResourceError.badResponse(responseCode: response.statusCode, message: nil)
         }
     }
 }
