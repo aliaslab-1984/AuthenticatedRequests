@@ -3,10 +3,10 @@
 This package aims to make your authenticated requests easier to perform.
 
 It has two sub-targets that helps you to perform OAuth Authentication flows and one to easily perform rest requests: 
-*   [AuthenticatedRequests](#Authenticated Requests)
+*   [AuthenticatedRequests](#AuthenticatedRequests)
 *   [CodeFlowOAuth](#CodeFlowOAuth)
 
-## Authenticated Requests
+## AuthenticatedRequests
 
 Each resource is described by the `Resource` protocol, which describes all the necessary information to retrieve a REST object from a remote service.
 
