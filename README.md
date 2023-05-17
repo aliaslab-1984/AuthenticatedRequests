@@ -2,7 +2,9 @@
 
 This package aims to make your authenticated requests easier to perform.
 
-It has two sub-targets that helps you to perform OAuth Authentication flows and one to easily perform rest requests.
+It has two sub-targets that helps you to perform OAuth Authentication flows and one to easily perform rest requests: 
+*   [AuthenticatedRequests](Authenticated Requests)
+*   [CodeFlowOAuth]()
 
 ## Authenticated Requests
 
@@ -84,3 +86,40 @@ let resourceRequest = UserFavoritesRequest(authenticator: authenticator)
 let result = try await resourceRequest.request(using: userInput)
 ```
 
+## CodeFlowOAuth
+
+This package helps you to perform code-flow authentication to third party services.
+It features both the standard code-flow procedure or the PKCE with the code challenge check.
+
+To get started you need to configure an `AuthenticationConfiguration` object, which hold all the required information to perform the authentication.
+
+If we look closer to the initializer, we see that the requirements are quite simple:
+
+```swift
+public init(baseURL: URL,
+            clientId: String,
+            redirectURI: String,
+            scope: String,
+            codeFlowConfiguration: some CodeFlowConfiguration)
+```
+
+| **Field**             | **Description**                                                                    |
+|-----------------------|------------------------------------------------------------------------------------|
+| baseURL               | The base url from which the authentication should be performed.                    |
+| clientId              | The client id for your application.                                                |
+| redirectURI           | The redirect URI that the service should use to share the authentication response. |
+| scope                 | The scope that you request to access.                                              |
+| codeFlowConfiguration | An object that describes the code flow procedure that needs to be used.            |
+
+### CodeFlowConfiguration
+
+A protocol requirement that is used to describe how the code flow procedure needs ton be performed.
+The package has already two implementations of this requirement:
+- **BasicCodeFlowConfiguration**:  The basic code flow procedure;
+- **PKCECodeFlowConfiguration**: Which implements the PKCE flow, with the challenge code verifier.
+
+Once you've got the AuthenticationConfiguration ready, you can feed it into the `CodeFlowManager`.
+
+### CodeFlowManager
+
+The code flow manager is responsible for presenting a proper webview to the user from which interact with the login frontend.
