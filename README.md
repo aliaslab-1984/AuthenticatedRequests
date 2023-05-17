@@ -1,17 +1,41 @@
 # Authenticated Requests
 
 This package aims to make your authenticated requests easier to perform.
-Each resource is described by the `Resource` protocol, which describes all the necessary information to retrieve a REST object from your backend.
+
+It has two sub-targets that helps you to perform OAuth Authentication flows and one to easily perform rest requests.
+
+## Authenticated Requests
+
+Each resource is described by the `Resource` protocol, which describes all the necessary information to retrieve a REST object from a remote service.
 
 Before requesting a resource you need to instantiate an `Authenticator` instance.
 An Authenticator is an `actor` which is responsible to keep track of the authentication status for each client.
 
+Before configuring an Authenticator, you need to know the flow used to retrieve the authentication token from the service, for this purpose you can use the `OAuthFlow` protocol, which is divided into three main implementations:
+
+- **ARClientCredentials**: The client credentials authentication flow, where there's a
+- **ARCodeFlow**: The code flow authentication flow. It supports both challenge flow or the simpler version.
+- **ARRefreshToken**: The refresh token flow, for refreshing an existing code flow authentication.
+
+
+If you want a customized flow, you can provide your own implementation, by conforming an object to `OAuthFlow` protocol.
+
+### Authenticator
+
+
 Configuring an Authenticator is really simple:
 
 ```swift
+// Define an authentication endpoint, from which the authentication flow should be performed.
 let endpoint = AuthenticationEndpoint(baseEndpoint: URL(staticString: "https://api.example.com"), path: "auth/v2/token")
+
+// Create an authenticator instance and specify the base endpoint from which the authentication  should be performed.
+
 let authenticator = ARAuthenticator(baseEndpoint: endpoint)
-let client = ARClientCredentials(clientID: "esempio", clientSecret: "esempio", scope: Set([]))
+
+// Create an OAuthFlow that needs to be used for authenticating with the base endpoint.
+
+let client = ARClientCredentials(clientID: "example", clientSecret: "example", scope: Set([]))
 await authenticator.configure(with: client)
 // We are ready to get our first Authenticated resource!
 ```
@@ -25,6 +49,8 @@ If you need some sort of authentication to retrieve a resource, you need to conf
 struct UserFavoritesRequest: Resource, AuthenticatedResource { 
 
     // Resource
+    
+    typealias Input = UserProfile
 
     var httpMethod: HttpMethod { 
         return .get
@@ -36,13 +62,10 @@ struct UserFavoritesRequest: Resource, AuthenticatedResource {
     
     // AuthenticatedResource
     
-    var authenticator: AnyAuthenticator<ARClientCredentials> { 
-    
+    var authenticator: AnyAuthenticator<OAuthFlow> { 
+        // .. return an authenticator
     }
     
-    func configure(with credentials: ARClientCredentials) async {
-    
-    }
 
 }
 ```
