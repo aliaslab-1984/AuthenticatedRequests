@@ -67,7 +67,7 @@ public extension Resource where Output: Codable {
         try Task.checkCancellation()
         
         // We first validate the URLResponse that we received in order to check if everything went ok.
-        try validateResponse(response)
+        try validateResponse(response, data: data)
         
         if Output.self == String.self {
             return (String(data: data, encoding: .utf8) ?? "") as! Self.Output // swiftlint:disable:this force_cast
@@ -113,7 +113,7 @@ public extension Resource where Output == URL {
         try Task.checkCancellation()
         
         // We first validate the URLResponse that we received in order to check if everything went ok.
-        try validateResponse(response)
+        try validateResponse(response, data: nil)
         
         return filesystemURL
     }
@@ -130,7 +130,7 @@ extension Resource {
      Specifically if the URLResponse could not be casted as a HTTPURLResponse or if the status code is not in the 2xx range.
      - Parameter response: The URLResponse that needs to be inspected.
      */
-    func validateResponse(_ response: URLResponse) throws {
+    func validateResponse(_ response: URLResponse, data: Data?) throws {
         guard let response = response as? HTTPURLResponse else {
             throw ResourceError.notHttpResponse
         }
@@ -138,7 +138,15 @@ extension Resource {
         print("Status code: ", response.statusCode)
         
         guard (200 ... 299) ~= response.statusCode else { // check for http errors
-            throw ResourceError.badResponse(responseCode: response.statusCode, message: nil)
+            let errorMessage: String?
+            if let data {
+                let error = try? JSONDecoder().decode(SimpleAPIError.self, from: data)
+                errorMessage = error?.error
+            } else {
+                errorMessage = nil
+            }
+            
+            throw ResourceError.badResponse(responseCode: response.statusCode, message: errorMessage)
         }
     }
 }
