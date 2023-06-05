@@ -7,9 +7,6 @@
 
 import Foundation
 
-/**
- Specifies all the requirements for obtaining the authentication token from an OAuth-Based service.
- */
 public protocol OAuthFlow {
     
     var clientID: String { get }
