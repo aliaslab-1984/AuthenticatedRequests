@@ -47,7 +47,9 @@ public struct LoginWebView: UIViewControllerRepresentable {
     }
     
     public func makeUIViewController(context: Context) -> LoginWebViewController {
-        return LoginWebViewController(initialURL: initialURL, redirectURLIntercept: redirectURLIntercept, onIntercept: redirectURLInterceptor)
+        return LoginWebViewController(initialURL: initialURL,
+                                      redirectURLIntercept: redirectURLIntercept,
+                                      onIntercept: redirectURLInterceptor)
     }
     
     public func updateUIViewController(_ uiViewController: LoginWebViewController,

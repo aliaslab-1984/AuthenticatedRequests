@@ -131,6 +131,7 @@ extension Resource {
      - Parameter response: The URLResponse that needs to be inspected.
      */
     func validateResponse(_ response: URLResponse, data: Data?) throws {
+        
         guard let response = response as? HTTPURLResponse else {
             throw ResourceError.notHttpResponse
         }
