@@ -35,20 +35,21 @@ public struct AuthenticationEndpoint: Resource, Equatable {
     }
     
     public func urlRequest(using parameter: Input) throws -> URLRequest {
+        
         let completeEndpoint = self.baseEndpoint.appendingPathComponent(self.newTokenPath)
         
         var urlRequest = URLRequest(url: completeEndpoint)
         urlRequest.httpMethod = self.httpMethod.rawValue
         urlRequest.setValue("application/x-www-form-urlencoded",
                             forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = parameter.httpBody
         
         if let userAgent {
             urlRequest.setValue(userAgent,
                                 forHTTPHeaderField: "User-Agent")
         }
         
-        urlRequest.httpBody = parameter.httpBody
-        
+        urlRequest.debug()
         return urlRequest
     }
     
@@ -62,4 +63,21 @@ public extension Dictionary where Value == String, Key == String {
         }.joined(separator: "&").data(using: .utf8)
     }
     
+}
+
+fileprivate extension URLRequest {
+
+    func debug() {
+#if DEBUG
+        defer { print(String(repeating: "=", count: 64)) }
+        print("== URLRequest " + String(repeating: "=", count: 50))
+        guard let httpMethod, let url else { return }
+        
+        print("\(httpMethod) \(url)")
+        print("Headers:")
+        print(self.allHTTPHeaderFields ?? "--")
+        print("Body:")
+        print(String(data: self.httpBody ?? Data(), encoding: .utf8) ?? "--")
+#endif
+    }
 }
