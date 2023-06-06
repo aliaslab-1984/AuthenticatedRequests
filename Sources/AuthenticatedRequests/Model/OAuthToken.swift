@@ -54,7 +54,7 @@ public struct OAuth2Token: BearerToken {
                 expires_in: Int,
                 token_type: String,
                 scope: String? = nil,
-                creationDate: Date) { // swiftlint:disable:this identifier_name
+                creationDate: Date = Date()) { // swiftlint:disable:this identifier_name
         self.access_token = access_token
         self.refresh_token = refresh_token
         self.token_type = token_type

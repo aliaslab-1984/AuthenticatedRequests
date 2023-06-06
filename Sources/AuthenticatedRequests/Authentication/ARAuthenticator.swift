@@ -133,12 +133,7 @@ public actor ARAuthenticator: Authenticator {
     }
     
     private func assignNewToken(_ token: OAuth2Token) {
-        currentToken.access_token = token.access_token
-        currentToken.expires_in = token.expires_in
-        currentToken.token_type = token.token_type
-        if let refresh = token.refresh_token {
-            currentToken.refresh_token = refresh
-        }
+        currentToken = token
         currentToken.date = Date()
         
         if !tokenStore.saveToken(token: token) {
