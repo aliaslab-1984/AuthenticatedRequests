@@ -93,6 +93,7 @@ public actor ARAuthenticator: Authenticator {
     }
     
     public func validToken() async throws -> OAuth2Token {
+        
         if let refreshTask = fetchTask {
             return try await refreshTask.value
         }
@@ -100,32 +101,35 @@ public actor ARAuthenticator: Authenticator {
         let task = Task { () throws -> OAuth2Token in
             defer { self.fetchTask = nil }
             
-            let credentials = try await self.validateCredentials()
-            
             if self.currentToken.isValid {
                 return currentToken
             }
             
-            if let refresh = currentToken.refresh_token {
-                let flow = ARRefreshToken(clientID: credentials.clientID, clientSecret: "", refreshToken: refresh)
-                
-                let newToken = try await authenticationEndpoint.request(using: flow)
-                
-                assignNewToken(newToken)
-                
-                return newToken
-            } else {
-                let newToken = try await authenticationEndpoint.request(using: credentials)
-                
-                assignNewToken(newToken)
-                
-                return newToken
-            }
+            let newToken = try await getNewToken()
+            assignNewToken(newToken)
+            return newToken
         }
         
         self.fetchTask = task
         
         return try await task.value
+    }
+    
+    private func getNewToken() async throws -> OAuth2Token {
+        
+        let credentials = try await validateCredentials()
+        if let refresh = currentToken.refresh_token {
+            return try await refreshToken(refresh: refresh, clientId: credentials.clientID)
+        } else {
+            return try await authenticationEndpoint.request(using: credentials)
+        }
+    }
+    
+    public func refreshToken(refresh: String, clientId: String) async throws -> OAuth2Token {
+        let flow = ARRefreshToken(clientID: clientId,
+                                  clientSecret: "",
+                                  refreshToken: refresh)
+        return try await authenticationEndpoint.request(using: flow)
     }
     
     private func assignNewToken(_ token: OAuth2Token) {

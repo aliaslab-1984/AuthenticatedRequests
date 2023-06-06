@@ -46,6 +46,7 @@ public extension Authenticator where ARConfiguration == OAuthFlow {
      For example, not being nil or having all the fields non empty.
      */
     func validateCredentials() async throws -> ARConfiguration {
+        
         async let configuration = configuration()
         guard let clientCredentials = await configuration else {
             throw AuthenticatorError.missingConfiguration

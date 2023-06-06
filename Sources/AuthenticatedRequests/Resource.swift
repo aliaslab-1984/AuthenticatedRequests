@@ -136,7 +136,7 @@ extension Resource {
             throw ResourceError.notHttpResponse
         }
         
-        print("Status code: ", response.statusCode)
+        print("Status code:", response.statusCode)
         
         guard (200 ... 299) ~= response.statusCode else { // check for http errors
             let errorMessage: String?
@@ -147,6 +147,7 @@ extension Resource {
                 errorMessage = nil
             }
             
+            print("Error:", errorMessage ?? "-")
             throw ResourceError.badResponse(responseCode: response.statusCode, message: errorMessage)
         }
     }
