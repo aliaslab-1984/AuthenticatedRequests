@@ -105,9 +105,7 @@ public actor ARAuthenticator: Authenticator {
                 return currentToken
             }
             
-            let newToken = try await getNewToken()
-            assignNewToken(newToken)
-            return newToken
+            return try await getNewToken()
         }
         
         self.fetchTask = task
@@ -119,9 +117,13 @@ public actor ARAuthenticator: Authenticator {
         
         let credentials = try await validateCredentials()
         if let refresh = currentToken.refresh_token {
-            return try await refreshToken(refresh: refresh, clientId: credentials.clientID)
+            do {
+                return try await refreshToken(refresh: refresh, clientId: credentials.clientID)
+            } catch {
+                return try await newToken(credentials: credentials)
+            }
         } else {
-            return try await authenticationEndpoint.request(using: credentials)
+            return try await newToken(credentials: credentials)
         }
     }
     
@@ -129,7 +131,15 @@ public actor ARAuthenticator: Authenticator {
         let flow = ARRefreshToken(clientID: clientId,
                                   clientSecret: "",
                                   refreshToken: refresh)
-        return try await authenticationEndpoint.request(using: flow)
+        let newToken = try await authenticationEndpoint.request(using: flow)
+        assignNewToken(newToken)
+        return newToken
+    }
+    
+    private func newToken(credentials: ARConfiguration) async throws -> OAuth2Token {
+        let newToken = try await authenticationEndpoint.request(using: credentials)
+        assignNewToken(newToken)
+        return newToken
     }
     
     private func assignNewToken(_ token: OAuth2Token) {
