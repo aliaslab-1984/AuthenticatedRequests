@@ -30,7 +30,7 @@ struct CryptographicHelper {
     }
 
     /// Generating a code verifier for PKCE
-    static func generateCodeVerifier() -> String? {
+    static func generateCodeVerifier() -> String {
         var buffer = [UInt8](repeating: 0, count: 32)
         _ = SecRandomCopyBytes(kSecRandomDefault, buffer.count, &buffer)
        let codeVerifier = Data(buffer).base64EncodedString()

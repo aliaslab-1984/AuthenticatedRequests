@@ -120,7 +120,7 @@ public extension Resource where Output == URL {
     
 }
 
-extension Resource {
+private extension Resource {
     
     /**
      Given a URLResponse, this method trows an error if the response doesn't

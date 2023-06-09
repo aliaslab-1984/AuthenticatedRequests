@@ -32,7 +32,7 @@ public final class ARTokenManager {
     
     public func saveToken(token: OAuth2Token) -> Bool {
         
-        var success: Bool = true
+        var success = true
         if !keychain.set(object: token,
                          forKey: KeychainKey.clientToken.prefixed(keyPrefix),
                          usingEncoder: encoder) {

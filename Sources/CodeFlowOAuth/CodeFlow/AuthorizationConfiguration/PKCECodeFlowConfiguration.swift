@@ -23,9 +23,7 @@ public struct PKCECodeFlowConfiguration: CodeFlowConfiguration {
     public init(stateLenght: Int = 20) throws {
         self.state = CryptographicHelper.generateState(withLength: stateLenght)
         self.responseType = "code"
-        guard let verifier = CryptographicHelper.generateCodeVerifier() else {
-            throw PKCEConfigurationError.badVerifier
-        }
+        let verifier = CryptographicHelper.generateCodeVerifier()
         guard let challenge = CryptographicHelper.generateCodeChallenge(codeVerifier: verifier) else {
             throw PKCEConfigurationError.badChallenge
         }
