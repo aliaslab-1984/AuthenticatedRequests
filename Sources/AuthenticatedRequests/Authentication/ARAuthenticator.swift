@@ -11,6 +11,7 @@ public enum AuthenticatorError: Error, LocalizedError {
     case missingConfiguration
     case invalidClientCredentials
     case invalidScope
+    case invalidAuthorizeUrl
     
     public var errorDescription: String? {
         switch self {
@@ -20,6 +21,8 @@ public enum AuthenticatorError: Error, LocalizedError {
             return "The provided credentials are not valid."
         case .invalidScope:
             return "The provided scope, is not valid."
+        case .invalidAuthorizeUrl:
+            return "Invalid authorization URL"
         }
     }
     
@@ -34,7 +37,8 @@ public actor ARAuthenticator: Authenticator {
     public typealias ARConfiguration = OAuthFlow
     
     private var tokenStore: ARTokenManager
-    private var currentToken: OAuth2Token = .init(access_token: "", refresh_token: nil, expires_in: 0, token_type: "bearer", creationDate: Date())
+    private var currentToken: OAuth2Token = .init(access_token: "", refresh_token: nil,
+                                                  expires_in: 0, token_type: "bearer")
     /**
      The task that is responsible for the fetch of a new access token or for a refresh.
      */
