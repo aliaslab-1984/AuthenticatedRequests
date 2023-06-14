@@ -18,13 +18,16 @@ public protocol AuthenticatedResource {
      */
     var authenticator: any Authenticator { get }
     
+    var authHeader: String? { get }
 }
 
 extension URLRequest {
     
     /// As the name says, it makes an URLRequest authenticated, by applying the `access_token` string and the `token_type` on the *Authorization* header field.
     /// - Parameter token: The token that is going to be used to authenticate the request.
-    mutating func authenticated(with token: OAuth2Token) {
-        setValue(token.token_type + " " + token.access_token, forHTTPHeaderField: "Authorization")
+    /// - Parameter headerField: The header field used to pass the authentication token to the server. If nil, it will use the standard "Authorzation" header field.
+    mutating func authenticated(with token: OAuth2Token,
+                                headerField: String? = nil) {
+        setValue(token.token_type + " " + token.access_token, forHTTPHeaderField: headerField ?? "Authorization")
     }
 }

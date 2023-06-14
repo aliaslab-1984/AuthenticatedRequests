@@ -45,7 +45,7 @@ public extension Resource where Output: Codable {
         // If the resource is also authenticated, wee need to embedd an authentication token.
         if let authenticated = self as? AuthenticatedResource {
             let token = try await authenticated.authenticator.validToken()
-            request.authenticated(with: token)
+            request.authenticated(with: token, headerField: authenticated.authHeader)
         }
         
         let session: URLSession
