@@ -91,7 +91,7 @@ public extension Resource where Output == URL {
         // If the resource is also authenticated, wee need to embedd an authentication token.
         if let authenticated = self as? AuthenticatedResource {
             let token = try await authenticated.authenticator.validToken()
-            request.authenticated(with: token)
+            request.authenticated(with: token, headerField: authenticated.authHeader)
         }
         
         let session: URLSession
@@ -129,6 +129,7 @@ private extension Resource {
      
      Specifically if the URLResponse could not be casted as a HTTPURLResponse or if the status code is not in the 2xx range.
      - Parameter response: The URLResponse that needs to be inspected.
+     - Parameter data: The data associated to the URLRequest. It's used to print the optional error message associated with the response code.
      */
     func validateResponse(_ response: URLResponse, data: Data?) throws {
         
