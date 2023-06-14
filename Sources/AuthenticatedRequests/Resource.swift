@@ -47,9 +47,9 @@ public extension Resource where Output: Codable {
             let token = try await authenticated.authenticator.validToken()
             request.authenticated(with: token, headerField: authenticated.authHeader)
         }
+        request.debug()
         
         let session: URLSession
-        
         if let urlConfiguration {
             session = URLSession(configuration: urlConfiguration)
         } else {
@@ -157,8 +157,12 @@ private extension Resource {
     
     func debug(_ response: URLResponse, data: Data?) {
 #if DEBUG
-        defer { print(String(repeating: "=", count: 64)) }
-        print("== URLResponse " + String(repeating: "=", count: 49))
+        defer { print(String(repeating: "=", count: debugHeaderLength)) }
+        
+        var trail = debugHeaderLength - 15
+        if trail < 2 { trail = 2 }
+        
+        print("== URLResponse " + String(repeating: "=", count: trail))
         print("\(response)")
         print("Raw Data:")
         if let data {

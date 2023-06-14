@@ -7,13 +7,17 @@
 
 import Foundation
 
+let debugHeaderLength = 80
+
 extension URLRequest {
     
     public func debug() {
 #if DEBUG
-        print("== 🔎 URLRequest 🔍 \(String(repeating: "=", count: 80 - 20))")
+        var trail = debugHeaderLength - 20
+        if trail < 1 { trail = 1 }
+        print("== 🔎 URLRequest 🔍 \(String(repeating: "=", count: trail))")
         print(asCurl)
-        print(String(repeating: "=", count: 80))
+        print(String(repeating: "=", count: debugHeaderLength))
 #endif
     }
     
