@@ -16,7 +16,7 @@ public protocol AuthenticatedResource {
     /**
      In order to make an authenticated request, is required to have an authenticator that provides a valid token that will be embedded on the HTTP request.
      */
-    var authenticator: AnyAuthenticator<OAuthFlow> { get }
+    var authenticator: any Authenticator { get }
     
 }
 
