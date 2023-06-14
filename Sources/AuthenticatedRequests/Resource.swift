@@ -40,21 +40,9 @@ public extension Resource where Output: Codable {
     /// - Returns: Returns the received data decoded into the expected output type, or throws an error.
     func request(using parameter: Input,
                  urlConfiguration: URLSessionConfiguration? = nil) async throws -> Output {
-        var request = try urlRequest(using: parameter)
-            
-        // If the resource is also authenticated, wee need to embedd an authentication token.
-        if let authenticated = self as? AuthenticatedResource {
-            let token = try await authenticated.authenticator.validToken()
-            request.authenticated(with: token, headerField: authenticated.authHeader)
-        }
-        request.debug()
         
-        let session: URLSession
-        if let urlConfiguration {
-            session = URLSession(configuration: urlConfiguration)
-        } else {
-            session = URLSession.shared
-        }
+        let request = try await urlRequest(with: parameter)
+        let session = session(urlConfiguration: urlConfiguration)
         
         let (data, response): (Data, URLResponse)
         if #available(iOS 15.0, macOS 12.0, *) {
@@ -74,9 +62,7 @@ public extension Resource where Output: Codable {
         } else {
             return try JSONDecoder().decode(Output.self, from: data)
         }
-        
     }
-    
 }
 
 public extension Resource where Output == URL {
@@ -86,21 +72,9 @@ public extension Resource where Output == URL {
     /// - Returns: Returns the received data decoded into the expected output type, or throws an error.
     func download(using parameter: Input,
                   urlConfiguration: URLSessionConfiguration? = nil) async throws -> Output {
-        var request = try urlRequest(using: parameter)
-            
-        // If the resource is also authenticated, wee need to embedd an authentication token.
-        if let authenticated = self as? AuthenticatedResource {
-            let token = try await authenticated.authenticator.validToken()
-            request.authenticated(with: token, headerField: authenticated.authHeader)
-        }
         
-        let session: URLSession
-        
-        if let urlConfiguration {
-            session = URLSession(configuration: urlConfiguration)
-        } else {
-            session = URLSession.shared
-        }
+        let request = try await urlRequest(with: parameter)
+        let session = session(urlConfiguration: urlConfiguration)
         
         let (filesystemURL, response): (URL, URLResponse)
         if #available(iOS 15.0, macOS 12.0, *) {
@@ -117,10 +91,34 @@ public extension Resource where Output == URL {
         
         return filesystemURL
     }
-    
 }
 
 private extension Resource {
+    
+    private func urlRequest(with parameter: Input) async throws -> URLRequest {
+        
+        var request = try urlRequest(using: parameter)
+        
+        // If the resource is also authenticated, wee need to embedd an authentication token.
+        if let authenticated = self as? AuthenticatedResource {
+            let token = try await authenticated.authenticator.validToken()
+            request.authenticated(with: token, headerField: authenticated.authHeader)
+        }
+        request.debug()
+        
+        return request
+    }
+    
+    private func session(urlConfiguration: URLSessionConfiguration? = nil) -> URLSession {
+        
+        let session: URLSession
+        if let urlConfiguration {
+            session = URLSession(configuration: urlConfiguration)
+        } else {
+            session = URLSession.shared
+        }
+        return session
+    }
     
     /**
      Given a URLResponse, this method trows an error if the response doesn't
