@@ -64,7 +64,7 @@ struct UserFavoritesRequest: Resource, AuthenticatedResource {
     
     // AuthenticatedResource
     
-    var authenticator: AnyAuthenticator<OAuthFlow> { 
+    var authenticator: any Authenticator { 
         // .. return an authenticator
     }
     
