@@ -132,6 +132,8 @@ private extension Resource {
      */
     func validateResponse(_ response: URLResponse, data: Data?) throws {
         
+        debug(response, data: data)
+        
         guard let response = response as? HTTPURLResponse else {
             throw ResourceError.notHttpResponse
         }
@@ -150,5 +152,19 @@ private extension Resource {
             print("Error:", errorMessage ?? "-")
             throw ResourceError.badResponse(responseCode: response.statusCode, message: errorMessage)
         }
+    }
+    
+    func debug(_ response: URLResponse, data: Data?) {
+#if DEBUG
+        defer { print(String(repeating: "=", count: 64)) }
+        print("== URLResponse " + String(repeating: "=", count: 49))
+        print("\(response)")
+        print("Raw Data:")
+        if let data {
+            print(String(decoding: data, as: UTF8.self))
+        } else {
+            print("-- Null --")
+        }
+#endif
     }
 }

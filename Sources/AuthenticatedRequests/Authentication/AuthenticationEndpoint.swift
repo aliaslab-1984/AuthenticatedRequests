@@ -67,20 +67,3 @@ public extension Dictionary where Value == String, Key == String {
     }
     
 }
-
-fileprivate extension URLRequest {
-
-    func debug() {
-#if DEBUG
-        defer { print(String(repeating: "=", count: 64)) }
-        print("== URLRequest " + String(repeating: "=", count: 50))
-        guard let httpMethod, let url else { return }
-        
-        print("\(httpMethod) \(url)")
-        print("Headers:")
-        print(self.allHTTPHeaderFields ?? "--")
-        print("Body:")
-        print(String(data: self.httpBody ?? Data(), encoding: .utf8) ?? "--")
-#endif
-    }
-}
