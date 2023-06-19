@@ -8,6 +8,7 @@
 import Foundation
 
 let debugHeaderLength = 80
+let debugVerbosity = 0
 
 extension URLRequest {
     
@@ -16,7 +17,11 @@ extension URLRequest {
         var trail = debugHeaderLength - 20
         if trail < 1 { trail = 1 }
         print("== 🔎 URLRequest 🔍 \(String(repeating: "=", count: trail))")
-        print(asCurl)
+        if debugVerbosity > 0 {
+            print(asCurl)
+        } else {
+            print("➡️", url?.absoluteString ?? "URL??")
+        }
         print(String(repeating: "=", count: debugHeaderLength))
 #endif
     }

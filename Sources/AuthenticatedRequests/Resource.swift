@@ -161,12 +161,17 @@ private extension Resource {
         if trail < 2 { trail = 2 }
         
         print("== URLResponse " + String(repeating: "=", count: trail))
-        print("\(response)")
-        print("Raw Data:")
-        if let data {
-            print(String(decoding: data, as: UTF8.self))
+        
+        if debugVerbosity > 0 {
+            print("\(response)")
+            print("Raw Data:")
+            if let data {
+                print(String(decoding: data, as: UTF8.self))
+            } else {
+                print("-- Null --")
+            }
         } else {
-            print("-- Null --")
+            print("⬅️", response.url?.absoluteString ?? "URL??")
         }
 #endif
     }
