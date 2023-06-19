@@ -49,7 +49,7 @@ public struct AuthenticationEndpoint: Resource, Equatable {
                                 forHTTPHeaderField: "User-Agent")
         }
         
-        urlRequest.debug()
+        //urlRequest.debug()
         return urlRequest
     }
     
