@@ -34,9 +34,9 @@ extension URLRequest {
         
         var cUrlRepresentation = "curl -v -X \(httpMethod ?? "Unknown") \\\n"
         
-        allHTTPHeaderFields?.forEach({ touple in
+        allHTTPHeaderFields?.forEach { touple in
             cUrlRepresentation.append("-H \"\(touple.key): \(touple.value)\" \\\n")
-        })
+        } 
         
         if let httpBody,
            let stringBody = String(data: httpBody, encoding: .utf8) {
