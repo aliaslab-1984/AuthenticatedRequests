@@ -58,10 +58,16 @@ public extension Resource where Output: Codable {
         try validateResponse(response, data: data)
         
         if Output.self == String.self {
-            return (String(data: data, encoding: .utf8) ?? "") as! Self.Output // swiftlint:disable:this force_cast
+            if let dataStr = (String(data: data, encoding: .utf8) ?? "") as? Self.Output {
+                return dataStr
+            }
+        } else if Output.self == Data.self {
+            if let data = data as? Self.Output { return data }
         } else {
             return try JSONDecoder().decode(Output.self, from: data)
         }
+        
+        throw ResourceError.badDataType
     }
 }
 
