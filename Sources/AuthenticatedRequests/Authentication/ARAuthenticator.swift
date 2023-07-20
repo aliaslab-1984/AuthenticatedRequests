@@ -128,8 +128,10 @@ public actor ARAuthenticator: Authenticator {
         let credentials = try await validateCredentials()
         if let refresh = currentToken.refresh_token {
             do {
+                print(">> REFRESH Token <<")
                 return try await refreshToken(refresh: refresh, clientId: credentials.clientID)
             } catch {
+                print(">> NEW Token <<")
                 return try await newToken(credentials: credentials)
             }
         } else {
