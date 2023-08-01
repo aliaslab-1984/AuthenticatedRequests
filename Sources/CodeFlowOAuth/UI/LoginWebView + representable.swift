@@ -21,16 +21,22 @@ public struct LoginWebView: UIViewControllerRepresentable {
     public init(initialURL: URL,
                 redirectURLIntercept: URL,
                 redirectURLInterceptor: @escaping (URL) -> Void) {
+        
         self.initialURL = initialURL
         self.redirectURLIntercept = redirectURLIntercept
         self.redirectURLInterceptor = redirectURLInterceptor
     }
     
-    public init(codeflowManager: CodeFlowManager) {
-        let url = URL(string: codeflowManager.configuration.redirectURI)!
-        self.redirectURLIntercept = url
-        self.initialURL = try! codeflowManager.authorizeURL()
-        self.redirectURLInterceptor = { interceptedUrl in
+    public init?(codeflowManager: CodeFlowManager) {
+        
+        guard let url = URL(string: codeflowManager.configuration.redirectURI),
+              let initial = try? codeflowManager.authorizeURL() else {
+                  return nil
+              }
+        
+        redirectURLIntercept = url
+        initialURL = initial
+        redirectURLInterceptor = { interceptedUrl in
             let components = URLComponents(url: interceptedUrl, resolvingAgainstBaseURL: false)
             guard let items = components?.queryItems,
                   !items.isEmpty else {
@@ -46,17 +52,16 @@ public struct LoginWebView: UIViewControllerRepresentable {
         }
     }
     
-    public func makeUIViewController(context: Context) -> LoginWebViewController {
+    public func makeUIViewController(context: Context) -> UIViewControllerType {
         return LoginWebViewController(initialURL: initialURL,
                                       redirectURLIntercept: redirectURLIntercept,
                                       onIntercept: redirectURLInterceptor)
     }
     
-    public func updateUIViewController(_ uiViewController: LoginWebViewController,
+    public func updateUIViewController(_ uiViewController: UIViewControllerType,
                                        context: Context) {
         
     }
-    
 }
 
 #endif
