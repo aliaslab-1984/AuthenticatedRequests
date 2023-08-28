@@ -93,22 +93,13 @@ public final class CodeFlowManager {
     }
     
     func handleResponse(for items: [URLQueryItem]) throws -> String {
-        
-<<<<<<< HEAD
-        if let codeFlowConfiguration = configuration.codeFlowConfiguration as? CodeFlowConfiguration {
-            return try handleCodeFlowResult(for: codeFlowConfiguration, with: items)
-=======
-        if let standard = configuration.codeFlowConfiguration as? BasicCodeFlowConfiguration {
-            return try handleCodeFlowResult(for: standard, with: items)
-        } else {
-            throw LoginError.unknownCodeFlow
-        }
+        return try handleCodeFlowResult(for: configuration.codeFlowConfiguration, with: items)
     }
 }
 
 private extension CodeFlowManager {
     
-    func handleCodeFlowResult(for configuration: BasicCodeFlowConfiguration,
+    func handleCodeFlowResult(for configuration: CodeFlowConfiguration,
                               with items: [URLQueryItem]) throws -> String {
         
         guard let receivedState = getItemValue(name: "state", from: items) else {
