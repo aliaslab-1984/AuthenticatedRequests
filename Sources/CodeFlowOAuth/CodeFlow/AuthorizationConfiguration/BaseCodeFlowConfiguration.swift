@@ -9,7 +9,7 @@ import Foundation
 
 public struct BasicCodeFlowConfiguration: CodeFlowConfiguration {
     
-    let state: String
+    public let state: String
     let responseType: String
     
     public init(stateLenght: Int = 20) {

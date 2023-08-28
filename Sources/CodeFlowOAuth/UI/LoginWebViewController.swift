@@ -112,7 +112,6 @@ private extension LoginWebViewController {
         return url.scheme == redirectURLIntercept.scheme &&
                url.host == redirectURLIntercept.host
     }
-    
 }
 
 #endif

@@ -58,7 +58,6 @@ public extension Authenticator where ARConfiguration == OAuthFlow {
         
         return clientCredentials
     }
-    
 }
 
 // -MARK: AnyAuthenticator

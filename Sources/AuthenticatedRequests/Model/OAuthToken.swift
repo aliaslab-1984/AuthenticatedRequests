@@ -66,7 +66,17 @@ public struct OAuth2Token: BearerToken {
 }
 
 extension OAuth2Token {
+    
     /// An invalid token, with all the fields blank and an expiry time interval of 0.
-    public static let invalidToken = OAuth2Token(access_token: "", refresh_token: nil, expires_in: 0, token_type: "", creationDate: Date())
+    public static let invalidToken = OAuth2Token(access_token: "",
+                                                 refresh_token: nil,
+                                                 expires_in: 0,
+                                                 token_type: "",
+                                                 creationDate: Date())
+    
+    public static let empty = OAuth2Token(access_token: "",
+                                          refresh_token: nil,
+                                          expires_in: 0,
+                                          token_type: "bearer")
 }
 

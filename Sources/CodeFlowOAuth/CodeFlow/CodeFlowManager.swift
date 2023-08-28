@@ -95,9 +95,7 @@ public final class CodeFlowManager {
     func handleResponse(for items: [URLQueryItem]) throws -> String {
         
         if let standard = configuration.codeFlowConfiguration as? BasicCodeFlowConfiguration {
-            return try handleStandardCodeFlowResult(for: standard, with: items)
-        } else if let pkceConfiguration = configuration.codeFlowConfiguration as? PKCECodeFlowConfiguration {
-            return try handlePKCECodeFlowResult(for: pkceConfiguration, with: items)
+            return try handleCodeFlowResult(for: standard, with: items)
         } else {
             throw LoginError.unknownCodeFlow
         }
@@ -106,19 +104,14 @@ public final class CodeFlowManager {
 
 private extension CodeFlowManager {
     
-    func handleStandardCodeFlowResult(for configuration: BasicCodeFlowConfiguration,
-                                      with items: [URLQueryItem]) throws -> String {
-        guard let receivedStateItem = items.first(where: { $0.name == "state" }),
-              let receivedState = receivedStateItem.value,
-              !receivedState.isEmpty
-        else {
+    func handleCodeFlowResult(for configuration: BasicCodeFlowConfiguration,
+                              with items: [URLQueryItem]) throws -> String {
+        
+        guard let receivedState = getItemValue(name: "state", from: items) else {
             throw LoginError.missingState
         }
         
-        guard let receivedCodeItem = items.first(where: { $0.name == "code"}),
-              let receivedCode = receivedCodeItem.value,
-            !receivedCode.isEmpty
-        else {
+        guard let receivedCode = getItemValue(name: "code", from: items) else {
             throw LoginError.missingCode
         }
         
@@ -129,30 +122,14 @@ private extension CodeFlowManager {
         return receivedCode
     }
     
-    func handlePKCECodeFlowResult(for configuration: PKCECodeFlowConfiguration,
-                                    with items: [URLQueryItem]) throws -> String {
-        guard let receivedStateItem = items.first(where: { item in
-            item.name == "state"
-        }),
-              let receivedState = receivedStateItem.value,
-              !receivedState.isEmpty
-        else {
-            throw LoginError.missingState
-        }
+    private func getItemValue(name: String, from items: [URLQueryItem]) -> String? {
         
-        guard let receivedCodeItem = items.first(where: { item in
-            item.name == "code"
-        }), let receivedCode = receivedCodeItem.value,
-            !receivedCode.isEmpty
-        else {
-            throw LoginError.missingCode
-        }
+        guard let item = items.first(where: { $0.name == name }),
+              let value = item.value,
+              !value.isEmpty
+        else { return nil }
         
-        guard receivedState == configuration.state else {
-            throw LoginError.stateMismatch
-        }
-        
-        return receivedCode
+        return value
     }
 }
 

@@ -10,5 +10,5 @@ import Foundation
 public protocol CodeFlowConfiguration {
     
     var queryParameters: [URLQueryItem] { get }
-    
+    var state: String { get }
 }

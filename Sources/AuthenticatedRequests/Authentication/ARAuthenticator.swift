@@ -43,8 +43,7 @@ public actor ARAuthenticator: Authenticator {
     public typealias ARConfiguration = OAuthFlow
     
     private var tokenStore: ARTokenManager
-    private var currentToken: OAuth2Token = .init(access_token: "", refresh_token: nil,
-                                                  expires_in: 0, token_type: "bearer")
+    private var currentToken = OAuth2Token.empty
     /**
      The task that is responsible for the fetch of a new access token or for a refresh.
      */
@@ -123,6 +122,19 @@ public actor ARAuthenticator: Authenticator {
         return try await task.value
     }
     
+    public func removeToken() -> Bool {
+        
+        currentToken = .empty
+//        if let codeFlowCredentials = clientCredentials as? ARCodeFlow {
+//            clientCredentials = ARCodeFlow(clientID: codeFlowCredentials.clientID,
+//                                           code: "",
+//                                           redirectUrl: codeFlowCredentials.redirectUrl,
+//                                           codeVerifier: codeFlowCredentials.codeVerifier)
+//        }
+        clientCredentials = nil
+        return tokenStore.removeToken()
+    }
+    
     private func getNewToken() async throws -> OAuth2Token {
         
         let credentials = try await validateCredentials()
@@ -155,6 +167,7 @@ public actor ARAuthenticator: Authenticator {
     }
     
     private func assignNewToken(_ token: OAuth2Token) {
+        
         currentToken = token
         currentToken.date = Date()
         

@@ -76,7 +76,7 @@ public final class ARTokenManager {
             success = false
         }
         
-        if !keychain.delete(KeychainKey.clientToken.prefixed(keyPrefix)) {
+        if !keychain.delete(KeychainKey.creationDate.prefixed(keyPrefix)) {
             print("Unable to delete logged date for user \(keyPrefix).")
             success = false
         }

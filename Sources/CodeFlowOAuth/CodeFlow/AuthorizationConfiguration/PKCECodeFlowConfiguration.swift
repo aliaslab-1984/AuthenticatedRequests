@@ -14,7 +14,7 @@ public struct PKCECodeFlowConfiguration: CodeFlowConfiguration {
         case badChallenge
     }
     
-    let state: String
+    public let state: String
     let responseType: String
     let codeChallenge: String
     let codeChallengeMethod: String
