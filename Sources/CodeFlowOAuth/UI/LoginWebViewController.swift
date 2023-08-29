@@ -27,31 +27,14 @@ public final class LoginWebViewController: UIViewController, WKNavigationDelegat
     public init(initialURL: URL,
                 redirectURLIntercept: URL,
                 onIntercept: @escaping (URL) -> Void) {
+        
         self.initialURL = initialURL
         self.redirectURLIntercept = redirectURLIntercept
         self.redirectURLInterceptor = onIntercept
         super.init(nibName: nil, bundle: nil)
-    }
-    
-    public convenience init(codeFlow: CodeFlowManager) {
-        // TODO: find a way to unwrap
-        let url = URL(string: codeFlow.configuration.redirectURI)!
-        let initial = try! codeFlow.authorizeURL()
-        self.init(initialURL: initial,
-                  redirectURLIntercept: url) { interceptedUrl in
-            let components = URLComponents(url: interceptedUrl, resolvingAgainstBaseURL: false)
-            guard let items = components?.queryItems,
-                  !items.isEmpty else {
-                return
-            }
-            
-            do {
-                let activationCode = try codeFlow.handleResponse(for: items)
-                codeFlow.responseCode = activationCode
-            } catch {
-                print(error)
-            }
-        }
+        
+        LoginWebViewController.clearCache()
+        LoginWebViewController.clearCookies()
     }
     
     required init?(coder: NSCoder) {
@@ -111,6 +94,22 @@ private extension LoginWebViewController {
     func matchesInterceptorURL(_ url: URL) -> Bool {
         return url.scheme == redirectURLIntercept.scheme &&
                url.host == redirectURLIntercept.host
+    }
+    
+    static func clearCache() {
+        
+        URLCache.shared.removeAllCachedResponses()
+        WKWebsiteDataStore.default().removeData(
+            ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(),
+            modifiedSince: Date(timeIntervalSince1970: 0),
+            completionHandler:{})
+    }
+    
+    static func clearCookies() {
+        
+        for cookie in HTTPCookieStorage.shared.cookies ?? [] {
+            HTTPCookieStorage.shared.deleteCookie(cookie)
+        }
     }
 }
 

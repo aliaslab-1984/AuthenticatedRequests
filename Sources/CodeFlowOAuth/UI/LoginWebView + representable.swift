@@ -18,15 +18,6 @@ public struct LoginWebView: UIViewControllerRepresentable {
     private let redirectURLIntercept: URL
     private let redirectURLInterceptor: (URL) -> Void
     
-    public init(initialURL: URL,
-                redirectURLIntercept: URL,
-                redirectURLInterceptor: @escaping (URL) -> Void) {
-        
-        self.initialURL = initialURL
-        self.redirectURLIntercept = redirectURLIntercept
-        self.redirectURLInterceptor = redirectURLInterceptor
-    }
-    
     public init?(codeflowManager: CodeFlowManager) {
         
         guard let url = URL(string: codeflowManager.configuration.redirectURI),
