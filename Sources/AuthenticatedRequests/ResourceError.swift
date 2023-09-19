@@ -36,4 +36,12 @@ public enum ResourceError: Error, LocalizedError {
     public var errorDescription: String? {
         localizedDescription
     }
+    
+    public var errcode: Int? {
+        
+        guard case let .badResponse(responseCode, _) = self else {
+            return nil
+        }
+        return responseCode
+    }
 }
