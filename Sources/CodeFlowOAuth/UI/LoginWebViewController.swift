@@ -62,6 +62,10 @@ public final class LoginWebViewController: UIViewController, WKNavigationDelegat
         
         webView.load(URLRequest(url: initialURL))
     }
+    
+    public func refresh() {
+        webView.load(URLRequest(url: initialURL))
+    }
 }
 
 public extension LoginWebViewController {
@@ -86,7 +90,6 @@ public extension LoginWebViewController {
 
         decisionHandler(.allow)
     }
-    
 }
 
 private extension LoginWebViewController {
@@ -114,4 +117,3 @@ private extension LoginWebViewController {
 }
 
 #endif
-

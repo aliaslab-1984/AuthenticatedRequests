@@ -14,11 +14,14 @@ public struct LoginWebView: UIViewControllerRepresentable {
     
     public typealias UIViewControllerType = LoginWebViewController
     
+    @Binding var reload: Bool
+    
     private let initialURL: URL
     private let redirectURLIntercept: URL
     private let redirectURLInterceptor: (URL) -> Void
     
-    public init?(codeflowManager: CodeFlowManager) {
+    public init?(codeflowManager: CodeFlowManager,
+                 reload: Binding<Bool> = .constant(true)) {
         
         guard let url = URL(string: codeflowManager.configuration.redirectURI),
               let initial = try? codeflowManager.authorizeURL() else {
@@ -41,6 +44,8 @@ public struct LoginWebView: UIViewControllerRepresentable {
                 print(error)
             }
         }
+        
+        _reload = reload
     }
     
     public func makeUIViewController(context: Context) -> UIViewControllerType {
@@ -51,7 +56,12 @@ public struct LoginWebView: UIViewControllerRepresentable {
     
     public func updateUIViewController(_ uiViewController: UIViewControllerType,
                                        context: Context) {
-        
+        if reload {
+            uiViewController.refresh()
+            DispatchQueue.main.async {
+                self.reload = false     // must be async
+            }
+        }
     }
 }
 
