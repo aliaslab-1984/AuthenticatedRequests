@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol OAuthFlow {
+public protocol OAuthFlow: Sendable {
     
     var clientID: String { get }
     var queryParameters: [String: String]? { get }

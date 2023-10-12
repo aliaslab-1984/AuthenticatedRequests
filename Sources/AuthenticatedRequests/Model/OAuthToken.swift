@@ -13,7 +13,7 @@ public protocol BearerToken: Codable, Equatable {
     var isValid: Bool { get }
 }
 
-public struct OAuth2Token: BearerToken {
+public struct OAuth2Token: BearerToken, Sendable {
     
     /// date when the token was initialized
     public var date = Date()
