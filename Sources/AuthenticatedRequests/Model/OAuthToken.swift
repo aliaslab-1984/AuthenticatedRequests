@@ -49,12 +49,15 @@ public struct OAuth2Token: BearerToken, Sendable {
         date = Date()
     }
     
+    // swiftlint:disable identifier_name
     public init(access_token: String,
                 refresh_token: String?,
                 expires_in: Int,
                 token_type: String,
                 scope: String? = nil,
-                creationDate: Date = Date()) { // swiftlint:disable:this identifier_name
+                creationDate: Date = Date()) {
+        // swiftlint:enable identifier_name
+        
         self.access_token = access_token
         self.refresh_token = refresh_token
         self.token_type = token_type
@@ -62,7 +65,6 @@ public struct OAuth2Token: BearerToken, Sendable {
         self.date = creationDate
         self.scope = scope
     }
-    
 }
 
 extension OAuth2Token {
